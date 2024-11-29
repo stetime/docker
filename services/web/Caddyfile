@@ -1,0 +1,21 @@
+*.local.stephenallen.dev {
+  tls {
+    dns cloudflare {env.CLOUDFLARE_API_KEY}
+  }
+
+  @qb host qb.local.stephenallen.dev
+  reverse_proxy @qb qbittorrent:80
+
+  @media host media.local.stephenallen.dev
+  reverse_proxy @media jellyfin:8096
+
+  @syncthing host syncthing.local.stephenallen.dev
+  reverse_proxy @syncthing syncthing:8384
+
+  @wrt host wrt.local.stephenallen.dev
+  reverse_proxy @wrt https://192.168.1.1:443 {
+    transport http {
+      tls_insecure_skip_verify
+    }
+  }
+}
