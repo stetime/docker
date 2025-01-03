@@ -31,7 +31,6 @@ services:
     volumes:
       - ${DOCKER_DATA_DIR}/qbittorrent/config:/config
       - ${MEDIA_DIR}:/downloads
-      - /mnt/media:/ext
     ports:
       - '49174:49174'
       - '49174:49174/udp'
@@ -50,7 +49,7 @@ services:
       - PGID=${PGID}
     volumes:
       - ${DOCKER_DATA_DIR}/syncthing/config:/var/syncthing
-      - ${DOCKER_DATA_DIR}/syncthing:/data:rw
+      - ${DOCKER_DATA_DIR}/syncthing/data:/data
     ports:
       - '22000:22000/udp'
       - '22000:22000/tcp'
@@ -59,7 +58,36 @@ services:
       - caddy
     restart: always
 
+  linkwarden-db:
+    image: postgres:16-alpine
+    container_name: linkwarden-db
+    networks:
+      - linkwarden
+    environment:
+      - POSTGRES_PASSWORD=${LINKWARDEN_DB_PASSWORD}
+    volumes:
+      - ${DOCKER_DATA_DIR}/linkwarden-db:/var/lib/postgresql/data
+
+  linkwarden:
+    image: ghcr.io/linkwarden/linkwarden:latest
+    container_name: linkwarden
+    networks:
+      - web
+      - linkwarden
+    environment:
+      - DATABASE_URL=${LINKWARDEN_DATABASE_URL}
+      - NEXTAUTH_URL=${LINKWARDEN_NEXTAUTH_URL}
+      - NEXTAUTH_SECRET=${LINKWARDEN_NEXTAUTH_SECRET}
+    volumes:
+      - ${DOCKER_DATA_DIR}/linkwarden:/data
+    depends_on:
+      - caddy
+      - linkwarden-db
+
 networks:
   web:
     driver: bridge
     name: web
+  linkwarden:
+    driver: bridge
+    name: linkwarden
