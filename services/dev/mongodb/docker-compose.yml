@@ -1,0 +1,16 @@
+services:
+  mongo:
+    image: mongo:8.0.4
+    container_name: dev-mongodb
+    networks:
+      - dev
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME: ${DEV_MONGO_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD: ${DEV_MONGO_PASSWORD}
+    volumes:
+      - ${DEV_DATA_DIR}/mongodb/data:/data/db
+    ports:
+      - '27017:27017'
+    labels:
+      - 'com.centurylinklabs.watchtower.enable=false'
+    restart: always
