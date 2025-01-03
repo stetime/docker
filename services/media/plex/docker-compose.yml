@@ -1,0 +1,19 @@
+services:
+  plex:
+    image: lscr.io/linuxserver/plex:latest
+    container_name: plex
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - VERSION=docker
+    devices:
+      - /dev/dri:/dev/dri
+    volumes:
+      - ${DOCKER_DATA_DIR}/plex/config:/config
+      - ${MEDIA_DIR}/tv:/tv:ro
+      - ${MEDIA_DIR}/film:/movies:ro
+      - ${MEDIA_DIR}/music:/music:ro
+    labels:
+      - 'com.centurylinklabs.watchtower.enable=true'
+    restart: unless-stopped
