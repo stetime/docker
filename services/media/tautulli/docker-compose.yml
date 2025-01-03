@@ -1,0 +1,17 @@
+services:
+  tautulli:
+    image: lscr.io/linuxserver/tautulli:latest
+    container_name: tautulli
+    networks:
+      - web
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ${DOCKER_DATA_DIR}/tautulli/config:/config
+    restart: unless-stopped
+
+networks:
+  web:
+    external: true
