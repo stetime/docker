@@ -14,11 +14,11 @@ services:
       - ${DOCKER_DATA_DIR}/caddy/data:/data
       - ${DOCKER_DATA_DIR}/caddy/config:/config
     ports:
-      - "80:80"
-      - "443:443"
+      - '80:80'
+      - '443:443'
     restart: always
-  
-  qbittorrent: 
+
+  qbittorrent:
     image: lscr.io/linuxserver/qbittorrent
     container_name: qbittorrent
     networks:
@@ -32,32 +32,13 @@ services:
       - ${DOCKER_DATA_DIR}/qbittorrent/config:/config
       - ${MEDIA_DIR}:/downloads
       - /mnt/media:/ext
-    ports: 
-      - "49174:49174"
-      - "49174:49174/udp"
+    ports:
+      - '49174:49174'
+      - '49174:49174/udp'
     depends_on:
       - caddy
     restart: always
 
-  jellyfin:
-    image: lscr.io/linuxserver/jellyfin
-    container_name: jellyfin
-    networks:
-      - web
-    environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=${TZ}
-    volumes:
-      - ${DOCKER_DATA_DIR}/jellyfin/config:/config
-      - ${MEDIA_DIR}/tv:/data/tvshows:ro
-      - ${MEDIA_DIR}/film:/data/movies:ro
-    devices:
-      - /dev/dri:/dev/dri
-    depends_on:
-      - caddy
-    restart: always
-  
   syncthing:
     image: syncthing/syncthing
     container_name: syncthing
@@ -71,13 +52,12 @@ services:
       - ${DOCKER_DATA_DIR}/syncthing/config:/var/syncthing
       - ${DOCKER_DATA_DIR}/syncthing:/data:rw
     ports:
-      - "22000:22000/udp"
-      - "22000:22000/tcp"
-      - "21027:21027/udp"
+      - '22000:22000/udp'
+      - '22000:22000/tcp'
+      - '21027:21027/udp'
     depends_on:
       - caddy
     restart: always
-
 
 networks:
   web:
